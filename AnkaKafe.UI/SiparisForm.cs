@@ -16,13 +16,16 @@ namespace AnkaKafe.UI
         private readonly KafeVeri _db;
         private readonly Siparis _siparis;
         private readonly BindingList<SiparisDetay> _blSiparisDetaylar;
+
         public SiparisForm(KafeVeri kafeVeri, Siparis siparis)
         {
             _db = kafeVeri;
             _siparis = siparis;
             _blSiparisDetaylar = new BindingList<SiparisDetay>(siparis.SiparisDetaylar);
             InitializeComponent();
+            dgvSiparisDetaylar.AutoGenerateColumns = false;  // otomatik sütun oluşturmayı kapat
             UrunleriGoster();
+            EkleFormSifirla();
             MasaNoGuncelle();
             FiyatGuncelle();
             DetayLariListele();
@@ -44,6 +47,7 @@ namespace AnkaKafe.UI
         }
 
         public object MasaNo { get; private set; }
+        public decimal OdenenTutar { get; private set; }
 
         private void MasaNoGuncelle()
         {
@@ -53,6 +57,8 @@ namespace AnkaKafe.UI
 
         private void btnEkle_Click(object sender, EventArgs e)
         {
+            if (cboUrun.SelectedIndex == -1 || nudAdet.Value < 1) return; // seçili ürün yok, metottan çık
+
             Urun urun = (Urun)cboUrun.SelectedItem;
             SiparisDetay siparisDetay = new SiparisDetay()
             {
@@ -64,6 +70,13 @@ namespace AnkaKafe.UI
 
             // _blSiparisDetaylar içinde _siparis.SiparisDetaylar'ı da içerdiği için aynı zamanda Form'dan gelen _siparis nesnesinin detaylarına da bu detayı ekleyecektir. Ve datagridview'ı kendindeki verilerin değiştiği konusunda bilgilendirecektir.
             _blSiparisDetaylar.Add(siparisDetay);
+            EkleFormSifirla();
+        }
+
+        private void EkleFormSifirla()
+        {
+            cboUrun.SelectedIndex = -1;
+            nudAdet.Value = 1;
         }
 
         private void DetayLariListele()
@@ -74,8 +87,35 @@ namespace AnkaKafe.UI
 
         private void dgvSiparisDetaylar_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            DialogResult dr = MessageBox.Show("Seçili sipariş detayları silinecektir. Emin misin?", "Silme Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.);
+            DialogResult dr = MessageBox.Show("Seçili sipariş detayları silinecektir. Emin misin?", "Silme Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
             e.Cancel = dr == DialogResult.No;
         }
+
+        private void btnAnasayfa_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void btnIptal_Click(object sender, EventArgs e)
+        {
+            SiparisKapat(SiparisDurum.Iptal, 0);
+        }
+
+        private void btnOde_Click(object sender, EventArgs e)
+        {
+            SiparisKapat(SiparisDurum.Odendi, _siparis.ToplamTutar());
+        }
+
+        private void SiparisKapat(SiparisDurum siparisDurum, decimal odenenTutar)
+        {
+            _siparis.OdenenTutar = odenenTutar;
+            _siparis.Durum = siparisDurum;
+            _siparis.KapanisZamani = DateTime.Now;
+            _db.AktifSiparisler.Remove(_siparis);
+            _db.GecmisSiparisler.Add(_siparis);
+            Close();
+        }
+
+
     }
 }

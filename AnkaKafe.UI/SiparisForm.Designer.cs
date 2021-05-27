@@ -38,6 +38,10 @@ namespace AnkaKafe.UI
             this.cboMasa = new System.Windows.Forms.ComboBox();
             this.btnTasi = new System.Windows.Forms.Button();
             this.dgvSiparisDetaylar = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblMasaNo = new System.Windows.Forms.Label();
             this.btnIptal = new System.Windows.Forms.Button();
             this.btnOde = new System.Windows.Forms.Button();
@@ -140,6 +144,11 @@ namespace AnkaKafe.UI
             this.dgvSiparisDetaylar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvSiparisDetaylar.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgvSiparisDetaylar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvSiparisDetaylar.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.Column2,
+            this.Column3,
+            this.Column4});
             this.dgvSiparisDetaylar.Location = new System.Drawing.Point(13, 72);
             this.dgvSiparisDetaylar.Name = "dgvSiparisDetaylar";
             this.dgvSiparisDetaylar.ReadOnly = true;
@@ -147,9 +156,41 @@ namespace AnkaKafe.UI
             this.dgvSiparisDetaylar.RowHeadersWidth = 51;
             this.dgvSiparisDetaylar.RowTemplate.Height = 29;
             this.dgvSiparisDetaylar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSiparisDetaylar.Size = new System.Drawing.Size(417, 381);
+            this.dgvSiparisDetaylar.Size = new System.Drawing.Size(415, 381);
             this.dgvSiparisDetaylar.TabIndex = 8;
             this.dgvSiparisDetaylar.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dgvSiparisDetaylar_UserDeletingRow);
+            // 
+            // Column1
+            // 
+            this.Column1.DataPropertyName = "UrunAd";
+            this.Column1.HeaderText = "Ürün Adı";
+            this.Column1.MinimumWidth = 6;
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            // 
+            // Column2
+            // 
+            this.Column2.DataPropertyName = "BirimFiyat";
+            this.Column2.HeaderText = "Birim Fiyatı";
+            this.Column2.MinimumWidth = 6;
+            this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
+            // 
+            // Column3
+            // 
+            this.Column3.DataPropertyName = "Adet";
+            this.Column3.HeaderText = "Adet";
+            this.Column3.MinimumWidth = 6;
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
+            // 
+            // Column4
+            // 
+            this.Column4.DataPropertyName = "TutarTL";
+            this.Column4.HeaderText = "Tutar";
+            this.Column4.MinimumWidth = 6;
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
             // 
             // lblMasaNo
             // 
@@ -173,6 +214,7 @@ namespace AnkaKafe.UI
             this.btnIptal.TabIndex = 10;
             this.btnIptal.Text = "Sipariş İptal";
             this.btnIptal.UseVisualStyleBackColor = false;
+            this.btnIptal.Click += new System.EventHandler(this.btnIptal_Click);
             // 
             // btnOde
             // 
@@ -184,6 +226,7 @@ namespace AnkaKafe.UI
             this.btnOde.TabIndex = 11;
             this.btnOde.Text = "Ödeme Al";
             this.btnOde.UseVisualStyleBackColor = false;
+            this.btnOde.Click += new System.EventHandler(this.btnOde_Click);
             // 
             // btnAnasayfa
             // 
@@ -195,6 +238,7 @@ namespace AnkaKafe.UI
             this.btnAnasayfa.TabIndex = 12;
             this.btnAnasayfa.Text = "Anasayfaya Dön";
             this.btnAnasayfa.UseVisualStyleBackColor = false;
+            this.btnAnasayfa.Click += new System.EventHandler(this.btnAnasayfa_Click);
             // 
             // label5
             // 
@@ -263,5 +307,9 @@ namespace AnkaKafe.UI
         private System.Windows.Forms.Button btnAnasayfa;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lblOdemeTutar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
     }
 }
