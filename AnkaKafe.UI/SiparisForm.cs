@@ -55,6 +55,7 @@ namespace AnkaKafe.UI
 
             };
             _siparis.SiparisDetaylar.Add(siparisDetay);
+            FiyatGuncelle();
             DetayLariListele();
         }
 
