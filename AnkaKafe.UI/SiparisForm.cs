@@ -15,15 +15,22 @@ namespace AnkaKafe.UI
     {
         private readonly KafeVeri _db;
         private readonly Siparis _siparis;
+        private readonly BindingList<SiparisDetay> _blSiparisDetaylar;
         public SiparisForm(KafeVeri kafeVeri, Siparis siparis)
         {
             _db = kafeVeri;
             _siparis = siparis;
+            _blSiparisDetaylar = new BindingList<SiparisDetay>(siparis.SiparisDetaylar);
             InitializeComponent();
             UrunleriGoster();
             MasaNoGuncelle();
             FiyatGuncelle();
             DetayLariListele();
+            _blSiparisDetaylar.ListChanged += _blSiparisDetaylar_ListChanged;
+        }
+        private void _blSiparisDetaylar_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            FiyatGuncelle();
         }
 
         private void UrunleriGoster()
@@ -54,15 +61,21 @@ namespace AnkaKafe.UI
                 Adet = (int)nudAdet.Value
 
             };
-            _siparis.SiparisDetaylar.Add(siparisDetay);
-            FiyatGuncelle();
-            DetayLariListele();
+
+            // _blSiparisDetaylar içinde _siparis.SiparisDetaylar'ı da içerdiği için aynı zamanda Form'dan gelen _siparis nesnesinin detaylarına da bu detayı ekleyecektir. Ve datagridview'ı kendindeki verilerin değiştiği konusunda bilgilendirecektir.
+            _blSiparisDetaylar.Add(siparisDetay);
         }
 
         private void DetayLariListele()
         {
             dgvSiparisDetaylar.DataSource = null;
-            dgvSiparisDetaylar.DataSource = _siparis.SiparisDetaylar;
+            dgvSiparisDetaylar.DataSource = _blSiparisDetaylar;
+        }
+
+        private void dgvSiparisDetaylar_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("Seçili sipariş detayları silinecektir. Emin misin?", "Silme Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.);
+            e.Cancel = dr == DialogResult.No;
         }
     }
 }

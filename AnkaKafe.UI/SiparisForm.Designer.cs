@@ -133,16 +133,23 @@ namespace AnkaKafe.UI
             // 
             // dgvSiparisDetaylar
             // 
+            this.dgvSiparisDetaylar.AllowUserToAddRows = false;
             this.dgvSiparisDetaylar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvSiparisDetaylar.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvSiparisDetaylar.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgvSiparisDetaylar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSiparisDetaylar.Location = new System.Drawing.Point(13, 72);
             this.dgvSiparisDetaylar.Name = "dgvSiparisDetaylar";
+            this.dgvSiparisDetaylar.ReadOnly = true;
+            this.dgvSiparisDetaylar.RowHeadersVisible = false;
             this.dgvSiparisDetaylar.RowHeadersWidth = 51;
             this.dgvSiparisDetaylar.RowTemplate.Height = 29;
+            this.dgvSiparisDetaylar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSiparisDetaylar.Size = new System.Drawing.Size(417, 381);
             this.dgvSiparisDetaylar.TabIndex = 8;
+            this.dgvSiparisDetaylar.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.dgvSiparisDetaylar_UserDeletingRow);
             // 
             // lblMasaNo
             // 
