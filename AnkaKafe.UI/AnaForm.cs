@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,16 +15,33 @@ namespace AnkaKafe.UI
 {
     public partial class AnaForm : Form
     {
-        
-        KafeVeri db = new KafeVeri();
+
+        KafeVeri db;
         public AnaForm()
         {
-            OrnekUrunleriEkle();  //İleride kaldırılacak
+            VerileriOku();
             InitializeComponent();
             masalarImageList.Images.Add("bos", Resource.bosmasasimge);
             masalarImageList.Images.Add("dolu", Resource.dolumasasimge);
             MasalariOlustur();
         }
+
+        private void VerileriOku()
+        {
+            // verileri oku ve deserialize et
+            try
+            {
+                string json = File.ReadAllText("veri.json");
+                db = JsonSerializer.Deserialize<KafeVeri>(json);
+            }
+            // değer hata alırsan(dosya yoktur ya  da bozuktur)
+            catch (Exception)
+            {
+                db = new KafeVeri();
+                OrnekUrunleriEkle();
+            }
+        }
+
         private void OrnekUrunleriEkle()
         {
             db.Urunler.Add(new Urun() { UrunAd = "Çay", BirimFiyat = 4.00m});
@@ -37,9 +56,15 @@ namespace AnkaKafe.UI
                 lvi = new ListViewItem();
                 lvi.Tag = i;  // masa noyu her bir ögenin Tag property'sinde saklayalım
                 lvi.Text = "Masa" + i;
-                lvi.ImageKey = "bos";
+                lvi.ImageKey = MasaDoluMu(i) ? "dolu" : "bos";
                 lvwMasalar.Items.Add(lvi);
             }
+        }
+
+        private bool MasaDoluMu(int masaNo)
+        {
+            // verilen şartı sağlayan herhangi bir aktif sipariş var mı?
+            return db.AktifSiparisler.Any(x => x.MasaNo == masaNo);
         }
 
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -106,6 +131,17 @@ namespace AnkaKafe.UI
                     return siparis;
             }
             return null;
+        }
+
+        private void AnaForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            VerileriKaydet();
+        }
+
+        private void VerileriKaydet()
+        {
+            string json = JsonSerializer.Serialize(db);
+            File.WriteAllText("veri.json", json);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace AnkaKafe.UI
             // basılan tuş delete ise ve en az bir satır seçili ise
             if (e.KeyCode == Keys.Delete && dgvUrunler.SelectedRows.Count > 0)
             {
-                DialogResult dr = MessageBox.Show("Seçili ürün silinecektir. Onaylıyor musunuz?", "Ürün Silme Onayı", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                DialogResult dr = MessageBox.Show("Seçili ürün silinecektir. Onaylıyor musunuz?", "Ürün Silme Onayı", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
             }
             if (dr == DialogResult.Yes)
             {
