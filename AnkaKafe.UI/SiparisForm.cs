@@ -13,6 +13,8 @@ namespace AnkaKafe.UI
 {
     public partial class SiparisForm : Form
     {
+        public event EventHandler<MasaTasindiEventArgs> MasaTasindi;
+
         private readonly KafeVeri _db;
         private readonly Siparis _siparis;
         private readonly BindingList<SiparisDetay> _blSiparisDetaylar;
@@ -29,8 +31,27 @@ namespace AnkaKafe.UI
             MasaNoGuncelle();
             FiyatGuncelle();
             DetayLariListele();
+            MasaNolariDoldur();
             _blSiparisDetaylar.ListChanged += _blSiparisDetaylar_ListChanged;
         }
+
+        private void MasaNolariDoldur()
+        {
+            //List<int> bosMasaNolar = new List<int>();
+            //for (int i = 1; i < _db.MasaAdet; i++)
+            //{
+            //    // aktif siparişlerde i masa nosuna sahip sipariş var DEĞİLSE
+            //    if (!_db.AktifSiparisler.Any(x => x.MasaNo == i))
+            //    { 
+            //        bosMasaNolar.Add(i); 
+            //    }
+            //}
+            //cboMasa.DataSource = bosMasaNolar;
+
+            //ya da
+            cboMasa.DataSource = Enumerable.Range(1, 20).Where(i => !_db.AktifSiparisler.Any(s => s.MasaNo == i)).ToList();
+        }
+
         private void _blSiparisDetaylar_ListChanged(object sender, ListChangedEventArgs e)
         {
             FiyatGuncelle();
@@ -116,6 +137,25 @@ namespace AnkaKafe.UI
             Close();
         }
 
+        private void btnTasi_Click(object sender, EventArgs e)
+        {
+            // EVENT OLUŞTURMADA 2. ADIM
+            // EventHandler delegesi ile event oluşturulur
+            // Eğer event ile ilgili argümanlar varsa generic olan kullanılır
+            if (cboMasa.SelectedIndex == -1) return;
 
+            int eskiMasaNo = _siparis.MasaNo;
+            int yeniMasaNo = (int)cboMasa.SelectedItem;
+            _siparis.MasaNo = yeniMasaNo;
+            MasaNolariDoldur();  // dolu masalar değişti
+
+            // EVENT OLUŞTURMADA 3. ADIM
+            // event'e atanmış bir metot varsa uygun noktada uygun argümanlarla o metot çağrılır
+            if (MasaTasindi != null)
+            {
+                MasaTasindi(this, new MasaTasindiEventArgs(eskiMasaNo, yeniMasaNo));
+            }
+            MasaNoGuncelle();
+        }
     }
 }

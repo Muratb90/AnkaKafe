@@ -60,7 +60,6 @@ namespace AnkaKafe.UI
             int masaNo = (int)lvi.Tag;  // unboxing
             lvi.ImageKey = "dolu";
 
-            // todo: eğer bu masada önceden bir sipariş yoksa oluştur
             Siparis siparis = SiparisBul(masaNo);
             if (siparis == null)
             {
@@ -68,14 +67,34 @@ namespace AnkaKafe.UI
                 db.AktifSiparisler.Add(siparis);
                     
             }
-
-            // todo: bu siparişi başka bir formda aç
+            // EVENT OLUŞTURMADA 5. ADIM: Event'e metot atamak
             SiparisForm siparisForm = new SiparisForm(db, siparis);
+
+            siparisForm.MasaTasindi += SiparisForm_MasaTasindi;
+
             siparisForm.ShowDialog();
 
             // Sipariş formu kapandıktan sonra sipariş durumunu kontrol et
             if (siparis.Durum != SiparisDurum.Aktif)
                 lvi.ImageKey = "bos";
+        }
+
+        //EVENT OLUŞTURMADA 4. ADIM: Event'e atanacak metotu event delegesinin
+        // dönüş tipi ve argüman çeşitlerine uygun olarak oluşturma
+        private void SiparisForm_MasaTasindi(object sender, MasaTasindiEventArgs e)
+        {
+            foreach (ListViewItem lvi in lvwMasalar.Items)
+            {
+                int masaNo = (int)lvi.Tag;
+                if (masaNo == e.EskiMasaNo)
+                {
+                    lvi.ImageKey = "bos";
+                }
+                else if (masaNo == e.YeniMasaNo)
+                {
+                    lvi.ImageKey = "dolu";
+                }
+            }
         }
 
         private Siparis SiparisBul(int masaNo)
